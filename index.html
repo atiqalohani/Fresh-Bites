@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshBites | Farm to Table</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #2d6a4f;
+  --green-light: #52b788;
+  --green-pale: #d8f3dc;
+  --gold: #d4a017;
+  --gold-light: #f4e4a0;
+  --cream: #faf7f0;
+  --dark: #1a1a1a;
+  --text: #2c2c2c;
+  --muted: #6b7280;
+  --white: #ffffff;
+  --border: rgba(45,106,79,0.15);
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --radius: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ── CURSOR ── */
+.cursor {
+  width: 12px; height: 12px;
+  background: var(--green-light);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.15s, width 0.2s, height 0.2s;
+  mix-blend-mode: multiply;
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--green);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transition: all 0.12s;
+}
+
+/* ── ANNOUNCEMENT BANNER ── */
+.announcement {
+  background: var(--green);
+  color: var(--white);
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+.announcement span { color: var(--gold-light); font-weight: 500; }
+
+/* ── HEADER ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(250,247,240,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: var(--green);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo-leaf { font-size: 20px; }
+
+nav { display: flex; gap: 4px; }
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 400;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  position: relative;
+}
+nav a:hover { background: var(--green-pale); color: var(--green); }
+nav a.active { color: var(--green); font-weight: 500; }
+
+.header-cta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn-login {
+  background: none;
+  border: 1px solid var(--green);
+  color: var(--green);
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-login:hover { background: var(--green); color: var(--white); }
+.btn-primary {
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  padding: 9px 22px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary:hover { background: var(--green-light); transform: translateY(-1px); }
+
+/* ── SECTIONS (hidden by default) ── */
+.page-section { display: none; }
+.page-section.active { display: block; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 92vh;
+  background:
+    linear-gradient(to bottom right, rgba(45,106,79,0.85), rgba(82,183,136,0.6)),
+    url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1400') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  padding: 0 8%;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0; right: 0;
+  height: 80px;
+  background: var(--cream);
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+
+.hero-content { max-width: 600px; color: var(--white); }
+.hero-eyebrow {
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(42px, 6vw, 78px);
+  line-height: 1.1;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+.hero-title em { font-style: italic; color: var(--gold-light); }
+.hero-desc {
+  font-size: 17px;
+  line-height: 1.7;
+  opacity: 0.9;
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+.hero-btn {
+  padding: 14px 32px;
+  border-radius: 100px;
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-decoration: none;
+}
+.hero-btn-primary {
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  font-weight: 500;
+}
+.hero-btn-primary:hover { background: #e8b41e; transform: translateY(-2px); }
+.hero-btn-outline {
+  background: transparent;
+  color: var(--white);
+  border: 1.5px solid rgba(255,255,255,0.5);
+}
+.hero-btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+
+.hero-stats {
+  position: absolute;
+  right: 8%;
+  bottom: 15%;
+  display: flex;
+  gap: 32px;
+  opacity: 0;
+  animation: fadeUp 0.8s 1s forwards;
+}
+.hero-stat { text-align: center; color: var(--white); }
+.hero-stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  color: var(--gold-light);
+  display: block;
+}
+.hero-stat-label { font-size: 12px; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase; }
+
+/* ── PARALLAX STORY ── */
+.parallax-section {
+  padding: 100px 8%;
+  overflow: hidden;
+}
+.parallax-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4vw, 52px);
+  text-align: center;
+  margin-bottom: 16px;
+  color: var(--green);
+}
+.parallax-subtitle {
+  text-align: center;
+  color: var(--muted);
+  font-size: 16px;
+  margin-bottom: 64px;
+}
+
+.story-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  position: relative;
+}
+.story-steps::before {
+  content: '';
+  position: absolute;
+  top: 80px;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(to right, var(--green-pale), var(--green-light), var(--green-pale));
+}
+.story-step {
+  text-align: center;
+  padding: 32px 24px;
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+  cursor: default;
+}
+.story-step:hover { transform: translateY(-8px); box-shadow: var(--shadow); }
+.step-icon {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--green-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 20px;
+  border: 3px solid var(--green-light);
+}
+.step-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  color: var(--green-light);
+  opacity: 0.3;
+  position: absolute;
+  top: 12px;
+  right: 20px;
+}
+.story-step { position: relative; }
+.step-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.step-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+/* ── FEATURED CATEGORIES ── */
+.featured-cats {
+  padding: 60px 8% 100px;
+  background: var(--white);
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 3.5vw, 44px);
+  color: var(--dark);
+}
+.section-link {
+  color: var(--green);
+  font-size: 14px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--green);
+  padding-bottom: 2px;
+}
+
+.cats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.cat-card {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  cursor: pointer;
+  group: true;
+}
+.cat-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+.cat-card:hover img { transform: scale(1.08); }
+.cat-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 55%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  color: var(--white);
+}
+.cat-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 6px;
+}
+.cat-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+.cat-count { font-size: 13px; opacity: 0.75; }
+.cat-hover-info {
+  position: absolute;
+  inset: 0;
+  background: rgba(45,106,79,0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  opacity: 0;
+  transition: opacity 0.3s;
+  padding: 24px;
+  text-align: center;
+}
+.cat-card:hover .cat-hover-info { opacity: 1; }
+.cat-hover-info h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+.cat-hover-info p { font-size: 13px; opacity: 0.85; line-height: 1.6; }
+.cat-hover-btn {
+  margin-top: 20px;
+  padding: 10px 24px;
+  background: var(--gold);
+  color: var(--dark);
+  border: none;
+  border-radius: 100px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* ── DAILY MEALS ── */
+.daily-meals {
+  padding: 80px 8%;
+  background: var(--cream);
+}
+.meals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.meal-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.meal-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+.meal-img {
+  width: 100%; height: 200px;
+  object-fit: cover;
+}
+.meal-time-badge {
+  display: inline-block;
+  background: var(--green-pale);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin: 16px 16px 0;
+}
+.meal-body { padding: 12px 16px 20px; }
+.meal-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.meal-meta { font-size: 13px; color: var(--muted); display: flex; gap: 16px; }
+.meal-meta span { display: flex; align-items: center; gap: 4px; }
+
+/* ── FOOD CHART ── */
+.food-chart-page { padding: 80px 5%; }
+.chart-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+.filter-btn {
+  padding: 8px 22px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.filter-btn:hover, .filter-btn.active {
+  background: var(--green);
+  color: var(--white);
+  border-color: var(--green);
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+.food-item-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 20px;
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.food-item-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.food-item-card .food-emoji { font-size: 40px; display: block; margin-bottom: 12px; }
+.food-item-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.food-item-cat { font-size: 12px; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.nutrition-bars { display: flex; flex-direction: column; gap: 6px; }
+.nut-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+.nut-bar-track { height: 4px; background: var(--green-pale); border-radius: 2px; }
+.nut-bar-fill { height: 100%; background: var(--green-light); border-radius: 2px; transition: width 0.8s; }
+
+/* ── RECIPES PAGE ── */
+.recipes-page { padding: 80px 5%; }
+.recipes-filters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  background: var(--white);
+  padding: 24px;
+  border-radius: var(--radius);
+  margin-bottom: 40px;
+  border: 1px solid var(--border);
+}
+.filter-group label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.filter-group select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  background: var(--cream);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+.recipe-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.recipe-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+.recipe-img-wrap {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+.recipe-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.recipe-card:hover .recipe-img-wrap img { transform: scale(1.06); }
+.recipe-badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+}
+.badge {
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.badge-green { background: var(--green); color: var(--white); }
+.badge-gold { background: var(--gold); color: var(--dark); }
+.recipe-bookmark {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+  border: none;
+}
+.recipe-bookmark:hover { background: var(--white); transform: scale(1.1); }
+.recipe-body { padding: 16px 20px 20px; }
+.recipe-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.recipe-info { display: flex; gap: 16px; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.recipe-stars { color: var(--gold); font-size: 13px; }
+.recipe-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+.recipe-footer { display: flex; justify-content: space-between; align-items: center; }
+.btn-recipe {
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-recipe:hover { background: var(--green-light); }
+
+/* ── GARDEN VIEW ── */
+.garden-page { padding: 80px 5%; }
+.garden-hero {
+  background: linear-gradient(135deg, rgba(45,106,79,0.9), rgba(82,183,136,0.7)),
+    url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1200') center/cover;
+  border-radius: 24px;
+  padding: 80px 64px;
+  color: var(--white);
+  margin-bottom: 64px;
+  position: relative;
+  overflow: hidden;
+}
+.garden-hero h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px;
+  margin-bottom: 16px;
+}
+.garden-hero p { font-size: 18px; opacity: 0.9; max-width: 500px; line-height: 1.7; }
+
+.garden-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 60px;
+}
+.garden-card {
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 4/3;
+  cursor: pointer;
+}
+.garden-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.garden-card:hover img { transform: scale(1.08); }
+.garden-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 60%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  color: var(--white);
+}
+.garden-card-overlay h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 4px; }
+.garden-card-overlay p { font-size: 13px; opacity: 0.8; }
+
+.seasonal-crops { margin-top: 60px; }
+.crops-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+}
+.crop-item {
+  text-align: center;
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+  cursor: default;
+}
+.crop-item:hover { transform: translateY(-4px); border-color: var(--green-light); }
+.crop-emoji { font-size: 36px; display: block; margin-bottom: 8px; }
+.crop-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.crop-season { font-size: 11px; color: var(--green); margin-top: 4px; }
+
+/* ── HEALTH BENEFITS ── */
+.health-page { padding: 80px 5%; }
+.health-categories {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 60px;
+}
+.health-cat-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.health-cat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+.health-cat-header {
+  padding: 32px;
+  text-align: center;
+  color: var(--white);
+}
+.health-cat-icon { font-size: 48px; display: block; margin-bottom: 12px; }
+.health-cat-header h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+.health-cat-body { padding: 24px; }
+.health-benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.health-benefit-item:last-child { border-bottom: none; }
+.benefit-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green-light);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.benefit-text { font-size: 14px; line-height: 1.5; }
+
+/* ── SCIENTIFIC LAB ── */
+.lab-page { padding: 80px 5%; }
+.lab-hero {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  border-radius: 24px;
+  padding: 64px;
+  color: var(--white);
+  text-align: center;
+  margin-bottom: 64px;
+}
+.lab-hero h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 44px;
+  margin-bottom: 16px;
+  color: #a8edbd;
+}
+.lab-hero p { font-size: 17px; opacity: 0.8; max-width: 560px; margin: 0 auto; line-height: 1.7; }
+.trust-badges {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.trust-badge {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--white);
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-size: 13px;
+}
+
+.lab-services {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 60px;
+}
+.lab-service-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 32px;
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.lab-service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.lab-service-icon { font-size: 36px; margin-bottom: 16px; }
+.lab-service-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: var(--green);
+  margin-bottom: 12px;
+}
+.lab-service-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+.upload-section {
+  background: var(--white);
+  border: 2px dashed var(--green-light);
+  border-radius: var(--radius);
+  padding: 48px;
+  text-align: center;
+}
+.upload-icon { font-size: 48px; margin-bottom: 16px; display: block; }
+.upload-section h3 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 8px; }
+.upload-section p { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+
+/* ── APPOINTMENT ── */
+.appointment-page { padding: 80px 5%; }
+.booking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+.booking-types {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.booking-type-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.booking-type-card:hover, .booking-type-card.selected {
+  border-color: var(--green);
+  background: var(--green-pale);
+}
+.booking-type-icon { font-size: 32px; }
+.booking-type-info h4 { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+.booking-type-info p { font-size: 13px; color: var(--muted); }
+
+.booking-form {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 32px;
+  border: 1px solid var(--border);
+}
+.form-group { margin-bottom: 20px; }
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  background: var(--cream);
+  color: var(--text);
+  transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: var(--green-light);
+}
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+.time-slot {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--cream);
+}
+.time-slot:hover, .time-slot.selected {
+  background: var(--green);
+  color: var(--white);
+  border-color: var(--green);
+}
+.time-slot.disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── BLOG ── */
+.blog-page { padding: 80px 5%; }
+.blog-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  margin-top: 48px;
+}
+.blog-featured {
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.blog-featured:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.blog-featured img { width: 100%; height: 320px; object-fit: cover; }
+.blog-featured-body { padding: 32px; }
+.blog-tag {
+  display: inline-block;
+  background: var(--green-pale);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 16px;
+}
+.blog-featured-body h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.blog-featured-body p { color: var(--muted); font-size: 15px; line-height: 1.7; margin-bottom: 20px; }
+.blog-meta { font-size: 13px; color: var(--muted); display: flex; gap: 16px; }
+
+.blog-sidebar { display: flex; flex-direction: column; gap: 20px; }
+.blog-small-card {
+  display: flex;
+  gap: 16px;
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.blog-small-card:hover { transform: translateX(4px); border-color: var(--green-light); }
+.blog-small-card img { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+.blog-small-info h4 { font-family: 'Playfair Display', serif; font-size: 15px; margin-bottom: 6px; line-height: 1.3; }
+.blog-small-info p { font-size: 12px; color: var(--muted); }
+
+/* ── AUTH MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.auth-modal {
+  background: var(--white);
+  border-radius: 24px;
+  padding: 48px;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--muted);
+}
+.auth-modal h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  margin-bottom: 8px;
+  color: var(--green);
+}
+.auth-modal p { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+.auth-tabs { display: flex; gap: 0; margin-bottom: 32px; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+.auth-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  border: none;
+  background: none;
+  font-family: 'DM Sans', sans-serif;
+}
+.auth-tab.active { background: var(--green); color: var(--white); }
+.social-login {
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s;
+}
+.social-login:hover { border-color: var(--green-light); background: var(--green-pale); }
+.or-divider {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 16px 0;
+  position: relative;
+}
+.or-divider::before, .or-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: var(--border);
+}
+.or-divider::before { left: 0; }
+.or-divider::after { right: 0; }
+
+/* ── CONTACT ── */
+.contact-page { padding: 80px 5%; }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 48px;
+  margin-top: 48px;
+}
+.contact-info-card {
+  background: var(--green);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  color: var(--white);
+}
+.contact-info-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+.contact-info-card > p { opacity: 0.8; font-size: 15px; margin-bottom: 36px; line-height: 1.6; }
+.contact-item { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 24px; }
+.contact-item-icon {
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.contact-item-text strong { display: block; font-size: 13px; opacity: 0.7; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 1px; }
+.contact-item-text p { font-size: 14px; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--dark);
+  color: rgba(255,255,255,0.7);
+  padding: 64px 8% 32px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  gap: 40px;
+  margin-bottom: 48px;
+}
+.footer-brand .logo { color: var(--green-light); }
+.footer-brand p { font-size: 14px; line-height: 1.7; margin-top: 12px; max-width: 280px; }
+.footer-col h4 {
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 20px;
+}
+.footer-col a {
+  display: block;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--green-light); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .cats-grid { grid-template-columns: repeat(2, 1fr); }
+  .story-steps { grid-template-columns: 1fr; }
+  .story-steps::before { display: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  header { padding: 0 4%; }
+  nav { display: none; }
+  .cats-grid { grid-template-columns: 1fr; }
+  .meals-grid { grid-template-columns: 1fr; }
+  .recipes-grid { grid-template-columns: 1fr; }
+  .booking-grid { grid-template-columns: 1fr; }
+  .blog-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .hero-stats { position: static; margin-top: 40px; }
+  .hero-actions { flex-direction: column; }
+  .crops-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Announcement Banner -->
+<div class="announcement">
+  🌿 <span>New Season!</span> Spring harvest recipes are live — Explore farm-fresh ingredients now &nbsp;|&nbsp; Free delivery on orders over $50 🚚
+</div>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <span class="logo-leaf">🌿</span> FreshBites
+  </div>
+  <nav>
+    <a href="#" class="active" onclick="showPage('home')">Home</a>
+    <a href="#" onclick="showPage('foodchart')">Food Chart</a>
+    <a href="#" onclick="showPage('recipes')">Recipes</a>
+    <a href="#" onclick="showPage('garden')">Garden View</a>
+    <a href="#" onclick="showPage('health')">Health Benefits</a>
+    <a href="#" onclick="showPage('lab')">Lab Check</a>
+    <a href="#" onclick="showPage('appointment')">Appointments</a>
+    <a href="#" onclick="showPage('blog')">Blog</a>
+    <a href="#" onclick="showPage('contact')">Contact</a>
+  </nav>
+  <div class="header-cta">
+    <button class="btn-login" onclick="openAuth()">Login</button>
+    <button class="btn-primary" onclick="openAuth()">Get Started</button>
+  </div>
+</header>
+
+<!-- ═══════════ HOME PAGE ═══════════ -->
+<div id="page-home" class="page-section active">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Farm to Table · Organic · Fresh</p>
+      <h1 class="hero-title">Eat <em>Better,</em><br>Live Fresher</h1>
+      <p class="hero-desc">Discover nutritious recipes crafted from organic, locally-sourced ingredients. From garden to plate, every meal tells a story.</p>
+      <div class="hero-actions">
+        <a href="#" class="hero-btn hero-btn-primary" onclick="showPage('recipes')">Explore Recipes</a>
+        <a href="#" class="hero-btn hero-btn-outline" onclick="showPage('garden')">Visit Our Garden</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-num">500+</span><span class="hero-stat-label">Recipes</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">12</span><span class="hero-stat-label">Farm Partners</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">98%</span><span class="hero-stat-label">Organic</span></div>
+    </div>
+  </section>
+
+  <!-- Farm to Table Story -->
+  <section class="parallax-section">
+    <p class="parallax-subtitle">Our Philosophy</p>
+    <h2 class="parallax-title">From Farm to Your Plate</h2>
+    <div class="story-steps">
+      <div class="story-step">
+        <span class="step-num">01</span>
+        <div class="step-icon">🌱</div>
+        <h3 class="step-title">Grown with Care</h3>
+        <p class="step-desc">Our partner farms use sustainable, chemical-free methods to cultivate the freshest organic produce every season.</p>
+      </div>
+      <div class="story-step">
+        <span class="step-num">02</span>
+        <div class="step-icon">🧪</div>
+        <h3 class="step-title">Lab Tested</h3>
+        <p class="step-desc">Every batch is scientifically verified for nutrients, purity, and safety in our certified food testing laboratory.</p>
+      </div>
+      <div class="story-step">
+        <span class="step-num">03</span>
+        <div class="step-icon">🍽️</div>
+        <h3 class="step-title">Crafted for You</h3>
+        <p class="step-desc">Expert chefs and nutritionists transform these ingredients into delicious, health-optimized recipes for every lifestyle.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Categories -->
+  <section class="featured-cats">
+    <div class="section-header">
+      <h2 class="section-title">Explore Categories</h2>
+      <a href="#" class="section-link" onclick="showPage('foodchart')">View All →</a>
+    </div>
+    <div class="cats-grid">
+      <div class="cat-card" onclick="showPage('recipes')">
+        <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=400" alt="Fruits">
+        <div class="cat-overlay">
+          <span class="cat-label">Category</span>
+          <h3 class="cat-name">Fresh Fruits</h3>
+          <span class="cat-count">48 Recipes</span>
+        </div>
+        <div class="cat-hover-info">
+          <h4>Fresh Fruits</h4>
+          <p>Packed with vitamins & antioxidants. Boost immunity, improve digestion, and glow naturally.</p>
+          <button class="cat-hover-btn">View Recipes</button>
+        </div>
+      </div>
+      <div class="cat-card" onclick="showPage('recipes')">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400" alt="Vegetables">
+        <div class="cat-overlay">
+          <span class="cat-label">Category</span>
+          <h3 class="cat-name">Vegetables</h3>
+          <span class="cat-count">64 Recipes</span>
+        </div>
+        <div class="cat-hover-info">
+          <h4>Farm Vegetables</h4>
+          <p>Low calorie, high impact. Essential minerals and fiber for a balanced, healthy diet.</p>
+          <button class="cat-hover-btn">View Recipes</button>
+        </div>
+      </div>
+      <div class="cat-card" onclick="showPage('recipes')">
+        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400" alt="Smoothies">
+        <div class="cat-overlay">
+          <span class="cat-label">Category</span>
+          <h3 class="cat-name">Smoothies</h3>
+          <span class="cat-count">32 Recipes</span>
+        </div>
+        <div class="cat-hover-info">
+          <h4>Nutrition Smoothies</h4>
+          <p>Quick, delicious, and loaded with energy. Perfect breakfast or post-workout boost.</p>
+          <button class="cat-hover-btn">View Recipes</button>
+        </div>
+      </div>
+      <div class="cat-card" onclick="showPage('recipes')">
+        <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?w=400" alt="Proteins">
+        <div class="cat-overlay">
+          <span class="cat-label">Category</span>
+          <h3 class="cat-name">Proteins</h3>
+          <span class="cat-count">56 Recipes</span>
+        </div>
+        <div class="cat-hover-info">
+          <h4>Lean Proteins</h4>
+          <p>Build muscle, stay strong. High-quality protein sources for your fitness goals.</p>
+          <button class="cat-hover-btn">View Recipes</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Daily Meal Suggestions -->
+  <section class="daily-meals">
+    <div class="section-header">
+      <h2 class="section-title">Today's Meal Plan</h2>
+      <a href="#" class="section-link" onclick="showPage('recipes')">Full Plan →</a>
+    </div>
+    <div class="meals-grid">
+      <div class="meal-card">
+        <img class="meal-img" src="https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400" alt="Breakfast">
+        <span class="meal-time-badge">🌅 Breakfast</span>
+        <div class="meal-body">
+          <h3 class="meal-name">Acai Bowl with Granola</h3>
+          <div class="meal-meta">
+            <span>⏱ 10 min</span>
+            <span>🔥 320 kcal</span>
+            <span>💪 Vegan</span>
+          </div>
+        </div>
+      </div>
+      <div class="meal-card">
+        <img class="meal-img" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400" alt="Lunch">
+        <span class="meal-time-badge">☀️ Lunch</span>
+        <div class="meal-body">
+          <h3 class="meal-name">Superfood Buddha Bowl</h3>
+          <div class="meal-meta">
+            <span>⏱ 20 min</span>
+            <span>🔥 480 kcal</span>
+            <span>🥗 Vegetarian</span>
+          </div>
+        </div>
+      </div>
+      <div class="meal-card">
+        <img class="meal-img" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400" alt="Dinner">
+        <span class="meal-time-badge">🌙 Dinner</span>
+        <div class="meal-body">
+          <h3 class="meal-name">Herb Grilled Salmon</h3>
+          <div class="meal-meta">
+            <span>⏱ 35 min</span>
+            <span>🔥 560 kcal</span>
+            <span>🐟 Pescatarian</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════════ FOOD CHART PAGE ═══════════ -->
+<div id="page-foodchart" class="page-section">
+  <div class="food-chart-page">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Nutrition Food Chart</h2>
+        <p style="color:var(--muted);margin-top:6px;font-size:15px;">Explore nutritional data, vitamins, and health benefits by food category</p>
+      </div>
+    </div>
+
+    <div class="chart-filters">
+      <button class="filter-btn active" onclick="filterFoods('all',this)">All Foods</button>
+      <button class="filter-btn" onclick="filterFoods('fruits',this)">🍎 Fruits</button>
+      <button class="filter-btn" onclick="filterFoods('vegetables',this)">🥦 Vegetables</button>
+      <button class="filter-btn" onclick="filterFoods('grains',this)">🌾 Grains</button>
+      <button class="filter-btn" onclick="filterFoods('proteins',this)">🥩 Proteins</button>
+      <button class="filter-btn" onclick="filterFoods('dairy',this)">🥛 Dairy</button>
+      <button class="filter-btn" onclick="filterFoods('herbs',this)">🌿 Herbs</button>
+      <button class="filter-btn" onclick="filterGoal('weightloss',this)" style="background:var(--gold-light);border-color:var(--gold);">🎯 Weight Loss</button>
+      <button class="filter-btn" onclick="filterGoal('muscle',this)" style="background:var(--gold-light);border-color:var(--gold);">💪 Muscle Gain</button>
+      <button class="filter-btn" onclick="filterGoal('skin',this)" style="background:var(--gold-light);border-color:var(--gold);">✨ Glowing Skin</button>
+    </div>
+
+    <div class="chart-grid" id="food-chart-grid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ RECIPES PAGE ═══════════ -->
+<div id="page-recipes" class="page-section">
+  <div class="recipes-page">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Recipe Collection</h2>
+        <p style="color:var(--muted);margin-top:6px;">500+ recipes curated by nutritionists & expert chefs</p>
+      </div>
+    </div>
+
+    <div class="recipes-filters">
+      <div class="filter-group">
+        <label>Meal Type</label>
+        <select onchange="filterRecipes()">
+          <option>All Meals</option>
+          <option>Breakfast</option>
+          <option>Lunch</option>
+          <option>Dinner</option>
+          <option>Snacks</option>
+          <option>Desserts</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Diet</label>
+        <select onchange="filterRecipes()">
+          <option>All Diets</option>
+          <option>Vegan</option>
+          <option>Keto</option>
+          <option>Desi / South Asian</option>
+          <option>Low-Calorie</option>
+          <option>Gluten-Free</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Cooking Time</label>
+        <select onchange="filterRecipes()">
+          <option>Any Time</option>
+          <option>Under 15 min</option>
+          <option>15-30 min</option>
+          <option>30-60 min</option>
+          <option>Over 1 hour</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="recipes-grid" id="recipes-grid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ GARDEN VIEW PAGE ═══════════ -->
+<div id="page-garden" class="page-section">
+  <div class="garden-page">
+    <div class="garden-hero">
+      <h2>Our Living Garden</h2>
+      <p>Step inside our organic farms and hydroponic greenhouses. Every ingredient starts its journey here, grown with love and science.</p>
+      <div style="margin-top:32px;display:flex;gap:16px;">
+        <button class="hero-btn hero-btn-primary" onclick="showPage('appointment')" style="background:var(--gold);border:none;padding:14px 28px;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:var(--dark);">Book a Garden Visit</button>
+        <button class="hero-btn hero-btn-outline" style="background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.4);color:var(--white);padding:14px 28px;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;">Watch Tour Video</button>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Playfair Display',serif;font-size:32px;margin-bottom:8px;">Our Farm Sections</h3>
+    <p style="color:var(--muted);margin-bottom:32px;">360° views available — click to explore each area</p>
+    <div class="garden-grid">
+      <div class="garden-card">
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600" alt="Organic Farm">
+        <div class="garden-card-overlay">
+          <h3>Organic Farm Fields</h3>
+          <p>40 acres · Seasonal crops · Chemical-free</p>
+        </div>
+      </div>
+      <div class="garden-card">
+        <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=600" alt="Hydroponic">
+        <div class="garden-card-overlay">
+          <h3>Hydroponic Greenhouse</h3>
+          <p>Year-round · Precision nutrition · Zero pesticide</p>
+        </div>
+      </div>
+      <div class="garden-card">
+        <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=600" alt="Herb Garden">
+        <div class="garden-card-overlay">
+          <h3>Herb & Spice Garden</h3>
+          <p>80+ varieties · Medicinal & culinary · Aromatic</p>
+        </div>
+      </div>
+      <div class="garden-card">
+        <img src="https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=600" alt="Fruit Orchard">
+        <div class="garden-card-overlay">
+          <h3>Fruit Orchard</h3>
+          <p>Heirloom varieties · Seasonal harvest · Pollinator-friendly</p>
+        </div>
+      </div>
+      <div class="garden-card">
+        <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600" alt="Vegetable Plots">
+        <div class="garden-card-overlay">
+          <h3>Vegetable Plots</h3>
+          <p>Daily harvest · 60+ varieties · Community picks</p>
+        </div>
+      </div>
+      <div class="garden-card">
+        <img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600" alt="Composting">
+        <div class="garden-card-overlay">
+          <h3>Composting & Soil Lab</h3>
+          <p>Zero-waste · Soil science · Living microbiome</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="seasonal-crops">
+      <h3 style="font-family:'Playfair Display',serif;font-size:32px;margin-bottom:8px;">Spring Harvest</h3>
+      <p style="color:var(--muted);">Currently growing · Ready to harvest</p>
+      <div class="crops-grid">
+        <div class="crop-item"><span class="crop-emoji">🍓</span><div class="crop-name">Strawberries</div><div class="crop-season">Peak Season</div></div>
+        <div class="crop-item"><span class="crop-emoji">🥬</span><div class="crop-name">Spinach</div><div class="crop-season">Harvesting</div></div>
+        <div class="crop-item"><span class="crop-emoji">🥕</span><div class="crop-name">Carrots</div><div class="crop-season">3 weeks</div></div>
+        <div class="crop-item"><span class="crop-emoji">🌿</span><div class="crop-name">Basil</div><div class="crop-season">Available</div></div>
+        <div class="crop-item"><span class="crop-emoji">🍅</span><div class="crop-name">Tomatoes</div><div class="crop-season">6 weeks</div></div>
+        <div class="crop-item"><span class="crop-emoji">🫛</span><div class="crop-name">Snap Peas</div><div class="crop-season">Harvesting</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ HEALTH BENEFITS PAGE ═══════════ -->
+<div id="page-health" class="page-section">
+  <div class="health-page">
+    <h2 class="section-title" style="margin-bottom:8px;">Health Benefits Guide</h2>
+    <p style="color:var(--muted);margin-bottom:48px;">Science-backed nutrition for your personal health goals</p>
+
+    <div class="health-categories">
+      <div class="health-cat-card">
+        <div class="health-cat-header" style="background:linear-gradient(135deg,#2d6a4f,#52b788)">
+          <span class="health-cat-icon">✨</span>
+          <h3>Skin Care Foods</h3>
+          <p style="font-size:13px;opacity:0.85">Glow from within</p>
+        </div>
+        <div class="health-cat-body">
+          <div class="health-benefit-item"><div class="benefit-dot"></div><div class="benefit-text"><strong>Avocado</strong> — Rich in Vitamin E & healthy fats. Hydrates skin, reduces inflammation.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot"></div><div class="benefit-text"><strong>Blueberries</strong> — Packed with antioxidants that fight free radicals and slow aging.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot"></div><div class="benefit-text"><strong>Sweet Potato</strong> — Beta-carotene converts to Vitamin A for skin cell renewal.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot"></div><div class="benefit-text"><strong>Green Tea</strong> — Catechins reduce skin damage from UV rays.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot"></div><div class="benefit-text"><strong>Turmeric</strong> — Curcumin has potent anti-inflammatory and brightening properties.</div></div>
+        </div>
+      </div>
+      <div class="health-cat-card">
+        <div class="health-cat-header" style="background:linear-gradient(135deg,#d4a017,#f4c430)">
+          <span class="health-cat-icon">⚡</span>
+          <h3>Energy Boosting</h3>
+          <p style="font-size:13px;opacity:0.85">Natural vitality</p>
+        </div>
+        <div class="health-cat-body">
+          <div class="health-benefit-item"><div class="benefit-dot" style="background:var(--gold)"></div><div class="benefit-text"><strong>Bananas</strong> — Quick carbs + B6 for sustained energy without the crash.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot" style="background:var(--gold)"></div><div class="benefit-text"><strong>Oats</strong> — Complex carbohydrates for stable blood sugar and 4+ hrs energy.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot" style="background:var(--gold)"></div><div class="benefit-text"><strong>Almonds</strong> — Magnesium & B vitamins convert food into cellular energy.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot" style="background:var(--gold)"></div><div class="benefit-text"><strong>Chia Seeds</strong> — Omega-3s, fiber, and protein for marathon-level endurance.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot" style="background:var(--gold)"></div><div class="benefit-text"><strong>Lentils</strong> — Iron + folate reduce fatigue, increase oxygen transport.</div></div>
+        </div>
+      </div>
+      <div class="health-cat-card">
+        <div class="health-cat-header" style="background:linear-gradient(135deg,#1a5276,#2980b9)">
+          <span class="health-cat-icon">💪</span>
+          <h3>Weight Management</h3>
+          <p style="font-size:13px;opacity:0.85">Healthy transformation</p>
+        </div>
+        <div class="health-cat-body">
+          <div class="health-benefit-item"><div class="benefit-dot" style="background:#2980b9"></div><div class="benefit-text"><strong>Broccoli</strong> — High fiber, very low calorie. Fills you up and supports metabolism.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot" style="background:#2980b9"></div><div class="benefit-text"><strong>Greek Yogurt</strong> — Protein + probiotics boost metabolism and gut health.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot" style="background:#2980b9"></div><div class="benefit-text"><strong>Apple Cider Vinegar</strong> — Reduces appetite and improves insulin sensitivity.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot" style="background:#2980b9"></div><div class="benefit-text"><strong>Cayenne Pepper</strong> — Capsaicin increases thermogenesis by up to 5%.</div></div>
+          <div class="health-benefit-item"><div class="benefit-dot" style="background:#2980b9"></div><div class="benefit-text"><strong>Green Tea</strong> — EGCG catechins measurably boost fat burning.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infographic comparison -->
+    <div style="background:var(--white);border-radius:var(--radius);padding:40px;border:1px solid var(--border);">
+      <h3 style="font-family:'Playfair Display',serif;font-size:28px;margin-bottom:8px;">Good vs. Processed: Nutritional Comparison</h3>
+      <p style="color:var(--muted);margin-bottom:32px;">Why whole foods win every time</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+        <div>
+          <h4 style="color:var(--green);margin-bottom:16px;font-size:16px;">✅ Whole Foods</h4>
+          <div id="good-foods-bars"></div>
+        </div>
+        <div>
+          <h4 style="color:#e74c3c;margin-bottom:16px;font-size:16px;">❌ Processed Foods</h4>
+          <div id="bad-foods-bars"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ LAB CHECK PAGE ═══════════ -->
+<div id="page-lab" class="page-section">
+  <div class="lab-page">
+    <div class="lab-hero">
+      <h2>🔬 Scientific Lab Check</h2>
+      <p>Every ingredient undergoes rigorous testing in our ISO-certified laboratory. We publish full transparency reports so you can trust every bite.</p>
+      <div class="trust-badges">
+        <span class="trust-badge">🏆 ISO 22000 Certified</span>
+        <span class="trust-badge">🌿 100% Organic Verified</span>
+        <span class="trust-badge">🚫 Zero Pesticide</span>
+        <span class="trust-badge">✅ Heavy Metal Tested</span>
+        <span class="trust-badge">🧬 Nutrient Verified</span>
+      </div>
+    </div>
+
+    <div class="lab-services">
+      <div class="lab-service-card">
+        <div class="lab-service-icon">🧪</div>
+        <h3>Nutrient Verification</h3>
+        <p>Full macronutrient, micronutrient, and phytonutrient analysis using HPLC and mass spectrometry for lab-accurate vitamin and mineral readings.</p>
+      </div>
+      <div class="lab-service-card">
+        <div class="lab-service-icon">☣️</div>
+        <h3>Contaminant Testing</h3>
+        <p>Pesticide residue, heavy metal (lead, mercury, arsenic, cadmium), mycotoxin, and bacterial contamination screening on every batch.</p>
+      </div>
+      <div class="lab-service-card">
+        <div class="lab-service-icon">🔍</div>
+        <h3>Chemical-Free Certification</h3>
+        <p>PCR-based GMO screening and full synthetic additive analysis to confirm our chemical-free standards across the supply chain.</p>
+      </div>
+      <div class="lab-service-card">
+        <div class="lab-service-icon">📊</div>
+        <h3>Published Lab Reports</h3>
+        <p>Quarterly lab reports with charts, graphs, and statistical summaries available for public download and independent audit.</p>
+      </div>
+      <div class="lab-service-card">
+        <div class="lab-service-icon">🌡️</div>
+        <h3>Freshness & Shelf Life</h3>
+        <p>Accelerated shelf-life testing and real-time freshness monitoring ensure optimal nutrition density from farm to delivery.</p>
+      </div>
+      <div class="lab-service-card">
+        <div class="lab-service-icon">🏅</div>
+        <h3>Third-Party Audits</h3>
+        <p>Independent annual audits by certified food safety authorities validate our internal findings and certifications.</p>
+      </div>
+    </div>
+
+    <div class="upload-section">
+      <span class="upload-icon">📤</span>
+      <h3>Submit a Food Sample for Testing</h3>
+      <p>Have a food item you'd like tested? Submit a sample request and our lab team will get back to you within 48 hours.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:500px;margin:0 auto;">
+        <div class="form-group">
+          <input type="text" placeholder="Your Name" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);">
+        </div>
+        <div class="form-group">
+          <input type="email" placeholder="Email Address" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);">
+        </div>
+      </div>
+      <div class="form-group" style="max-width:500px;margin:0 auto 20px;">
+        <input type="text" placeholder="Describe your food sample..." style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);">
+      </div>
+      <button class="btn-primary" style="padding:14px 36px;font-size:15px;border-radius:100px;">Submit Sample Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ APPOINTMENT PAGE ═══════════ -->
+<div id="page-appointment" class="page-section">
+  <div class="appointment-page">
+    <h2 class="section-title" style="margin-bottom:8px;">Book an Appointment</h2>
+    <p style="color:var(--muted);margin-bottom:48px;">Schedule a garden visit, lab consultation, or nutrition session</p>
+
+    <div class="booking-grid">
+      <div>
+        <h3 style="font-size:18px;margin-bottom:20px;font-family:'Playfair Display',serif;">Select Service Type</h3>
+        <div class="booking-types">
+          <div class="booking-type-card selected" onclick="selectBooking(this)">
+            <span class="booking-type-icon">🌿</span>
+            <div class="booking-type-info">
+              <h4>Garden Visit</h4>
+              <p>Guided farm tour, 2 hours · $25/person</p>
+            </div>
+          </div>
+          <div class="booking-type-card" onclick="selectBooking(this)">
+            <span class="booking-type-icon">🧪</span>
+            <div class="booking-type-info">
+              <h4>Lab Testing Session</h4>
+              <p>Food sample analysis · From $49</p>
+            </div>
+          </div>
+          <div class="booking-type-card" onclick="selectBooking(this)">
+            <span class="booking-type-icon">🥗</span>
+            <div class="booking-type-info">
+              <h4>Nutrition Consultation</h4>
+              <p>1-on-1 with dietitian · 45 min · $60</p>
+            </div>
+          </div>
+          <div class="booking-type-card" onclick="selectBooking(this)">
+            <span class="booking-type-icon">👨‍🍳</span>
+            <div class="booking-type-info">
+              <h4>Cooking Masterclass</h4>
+              <p>Group class, max 8 · 3 hours · $45</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="booking-form">
+        <h3 style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:24px;">Your Details</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="Ahmed"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Khan"></div>
+        </div>
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="ahmed@example.com"></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+92 300 0000000"></div>
+        <div class="form-group"><label>Preferred Date</label><input type="date"></div>
+        <div class="form-group">
+          <label>Available Time Slots</label>
+          <div class="time-slots">
+            <div class="time-slot selected">9:00 AM</div>
+            <div class="time-slot">10:30 AM</div>
+            <div class="time-slot">12:00 PM</div>
+            <div class="time-slot">2:00 PM</div>
+            <div class="time-slot disabled">3:30 PM</div>
+            <div class="time-slot">5:00 PM</div>
+            <div class="time-slot disabled">6:30 PM</div>
+            <div class="time-slot">8:00 PM</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Special Requests</label>
+          <textarea placeholder="Any allergies, dietary requirements, or special needs..." style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);min-height:80px;resize:vertical;"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;">
+          <button style="padding:14px;border:1.5px solid var(--border);border-radius:12px;background:var(--cream);font-family:'DM Sans',sans-serif;cursor:pointer;">Pay Cash on Day</button>
+          <button class="btn-primary" style="padding:14px;border-radius:12px;font-size:15px;">Confirm & Pay Online</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ BLOG PAGE ═══════════ -->
+<div id="page-blog" class="page-section">
+  <div class="blog-page">
+    <h2 class="section-title" style="margin-bottom:48px;">FreshBites Journal</h2>
+    <div class="blog-grid">
+      <div class="blog-featured">
+        <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800" alt="Blog">
+        <div class="blog-featured-body">
+          <span class="blog-tag">Healthy Eating</span>
+          <h2>The Science Behind Eating Seasonal: Why Your Body Craves What the Earth Grows</h2>
+          <p>Modern research is confirming what traditional cultures have known for centuries — eating in sync with nature's seasons dramatically improves nutrient absorption, gut microbiome diversity, and overall vitality.</p>
+          <div class="blog-meta">
+            <span>📅 April 28, 2026</span>
+            <span>👤 Dr. Ayesha Malik</span>
+            <span>⏱ 8 min read</span>
+          </div>
+          <button class="btn-recipe" style="margin-top:20px;">Read Full Article</button>
+        </div>
+      </div>
+      <div class="blog-sidebar">
+        <div class="blog-small-card">
+          <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200" alt="Blog 2">
+          <div class="blog-small-info">
+            <span class="blog-tag" style="font-size:10px;padding:3px 8px;margin-bottom:6px;display:inline-block;">Smoothies</span>
+            <h4>5 Smoothie Mistakes That Are Ruining Your Nutrition</h4>
+            <p>April 25, 2026 · 5 min read</p>
+          </div>
+        </div>
+        <div class="blog-small-card">
+          <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200" alt="Blog 3">
+          <div class="blog-small-info">
+            <span class="blog-tag" style="font-size:10px;padding:3px 8px;margin-bottom:6px;display:inline-block;">Farming</span>
+            <h4>Hydroponic vs Soil-Grown: Which is More Nutritious?</h4>
+            <p>April 22, 2026 · 7 min read</p>
+          </div>
+        </div>
+        <div class="blog-small-card">
+          <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200" alt="Blog 4">
+          <div class="blog-small-info">
+            <span class="blog-tag" style="font-size:10px;padding:3px 8px;margin-bottom:6px;display:inline-block;">Recipes</span>
+            <h4>Building the Perfect Anti-Inflammatory Meal Plan</h4>
+            <p>April 18, 2026 · 10 min read</p>
+          </div>
+        </div>
+        <div class="blog-small-card">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200" alt="Blog 5">
+          <div class="blog-small-info">
+            <span class="blog-tag" style="font-size:10px;padding:3px 8px;margin-bottom:6px;display:inline-block;">Nutrition</span>
+            <h4>Fermented Foods: The Ancient Secret to Modern Gut Health</h4>
+            <p>April 15, 2026 · 6 min read</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ CONTACT PAGE ═══════════ -->
+<div id="page-contact" class="page-section">
+  <div class="contact-page">
+    <h2 class="section-title" style="margin-bottom:8px;">Get In Touch</h2>
+    <p style="color:var(--muted);">We'd love to hear from you. Our team usually responds within 24 hours.</p>
+    <div class="contact-grid">
+      <div class="contact-info-card">
+        <h3>FreshBites</h3>
+        <p>Growing food, nurturing health, and building community one meal at a time.</p>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div class="contact-item-text"><strong>Address</strong><p>123 Food Street, Culinary City, Lahore</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div class="contact-item-text"><strong>Phone</strong><p>+92 (42) 123-4567</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">✉️</div>
+          <div class="contact-item-text"><strong>Email</strong><p>hello@freshbites.com</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🕐</div>
+          <div class="contact-item-text"><strong>Hours</strong><p>Mon–Sat: 8am – 8pm</p></div>
+        </div>
+      </div>
+      <div style="background:var(--white);border-radius:var(--radius);padding:40px;border:1px solid var(--border);">
+        <h3 style="font-family:'Playfair Display',serif;font-size:24px;margin-bottom:24px;">Send a Message</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="Your name"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Last name"></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Subject</label>
+          <select style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);">
+            <option>General Inquiry</option>
+            <option>Recipe Submission</option>
+            <option>Bulk Orders</option>
+            <option>Partnership</option>
+            <option>Lab Testing</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Message</label>
+          <textarea placeholder="Tell us how we can help..." style="width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);min-height:120px;resize:vertical;"></textarea>
+        </div>
+        <button class="btn-primary" style="width:100%;padding:14px;font-size:15px;border-radius:12px;">Send Message 🌿</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">🌿 FreshBites</div>
+      <p>Connecting farms, science, and kitchens to bring you the freshest, healthiest food experience possible.</p>
+      <div style="display:flex;gap:12px;margin-top:20px;">
+        <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--white);text-decoration:none;">📘</a>
+        <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--white);text-decoration:none;">📸</a>
+        <a href="#" style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--white);text-decoration:none;">🐦</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="#" onclick="showPage('foodchart')">Food Chart</a>
+      <a href="#" onclick="showPage('recipes')">Recipes</a>
+      <a href="#" onclick="showPage('garden')">Garden View</a>
+      <a href="#" onclick="showPage('health')">Health Benefits</a>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="#" onclick="showPage('lab')">Lab Testing</a>
+      <a href="#" onclick="showPage('appointment')">Appointments</a>
+      <a href="#" onclick="showPage('blog')">Blog</a>
+      <a href="#" onclick="showPage('contact')">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Policy</a>
+      <a href="#">Lab Certifications</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 FreshBites. All rights reserved.</span>
+    <span>Made with 🌿 for healthier living</span>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="auth-modal">
+    <button class="modal-close" onclick="closeAuth()">×</button>
+    <h2>Welcome Back</h2>
+    <p>Sign in to access your recipes, appointments, and personalized diet plan.</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuth('login',this)">Login</button>
+      <button class="auth-tab" onclick="switchAuth('signup',this)">Sign Up</button>
+    </div>
+    <button class="social-login">🔵 Continue with Google</button>
+    <div class="or-divider">or</div>
+    <div id="auth-form-login">
+      <div class="form-group"><label style="font-size:13px;font-weight:500;margin-bottom:6px;display:block;">Email</label><input type="email" placeholder="your@email.com" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);" /></div>
+      <div class="form-group" style="margin-bottom:24px;"><label style="font-size:13px;font-weight:500;margin-bottom:6px;display:block;">Password</label><input type="password" placeholder="••••••••" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);" /></div>
+      <button class="btn-primary" style="width:100%;padding:14px;font-size:15px;border-radius:12px;">Sign In</button>
+    </div>
+    <div id="auth-form-signup" style="display:none;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group"><label style="font-size:13px;font-weight:500;margin-bottom:6px;display:block;">First Name</label><input type="text" placeholder="Ahmed" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);" /></div>
+        <div class="form-group"><label style="font-size:13px;font-weight:500;margin-bottom:6px;display:block;">Last Name</label><input type="text" placeholder="Khan" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);" /></div>
+      </div>
+      <div class="form-group"><label style="font-size:13px;font-weight:500;margin-bottom:6px;display:block;">Email</label><input type="email" placeholder="your@email.com" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);" /></div>
+      <div class="form-group" style="margin-bottom:24px;"><label style="font-size:13px;font-weight:500;margin-bottom:6px;display:block;">Create Password</label><input type="password" placeholder="••••••••" style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:'DM Sans',sans-serif;font-size:14px;background:var(--cream);" /></div>
+      <button class="btn-primary" style="width:100%;padding:14px;font-size:15px;border-radius:12px;">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=(mx-6)+'px';
+  cursor.style.top=(my-6)+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*0.12;
+  ry+=(my-ry)*0.12;
+  ring.style.left=(rx-18)+'px';
+  ring.style.top=(ry-18)+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a,button,.cat-card,.recipe-card,.blog-small-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2.5)';ring.style.transform='scale(1.4)';});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='scale(1)';ring.style.transform='scale(1)';});
+});
+
+// ── PAGE NAVIGATION ──
+function showPage(id) {
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='foodchart') renderFoodChart('all');
+  if(id==='recipes') renderRecipes();
+  if(id==='health') renderHealthBars();
+}
+
+// ── AUTH ──
+function openAuth(){ document.getElementById('auth-modal').classList.add('open'); }
+function closeAuth(){ document.getElementById('auth-modal').classList.remove('open'); }
+function switchAuth(mode,el){
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('auth-form-login').style.display=mode==='login'?'block':'none';
+  document.getElementById('auth-form-signup').style.display=mode==='signup'?'block':'none';
+}
+document.getElementById('auth-modal').addEventListener('click',function(e){if(e.target===this)closeAuth();});
+
+// ── BOOKING ──
+function selectBooking(el){
+  document.querySelectorAll('.booking-type-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+document.querySelectorAll('.time-slot:not(.disabled)').forEach(s=>{
+  s.addEventListener('click',function(){
+    document.querySelectorAll('.time-slot').forEach(ts=>ts.classList.remove('selected'));
+    this.classList.add('selected');
+  });
+});
+
+// ── FOOD DATA ──
+const foodData = [
+  {name:'Apple',emoji:'🍎',cat:'fruits',cal:52,goal:['weightloss','skin'],vit:'C, K',min:'Potassium',nuts:{Carbs:90,Fiber:75,VitC:85,Sugar:40}},
+  {name:'Blueberry',emoji:'🫐',cat:'fruits',cal:57,goal:['skin','weightloss'],vit:'C, K, B6',min:'Mn, K',nuts:{Carbs:85,Fiber:65,Antioxidants:98,Sugar:50}},
+  {name:'Banana',emoji:'🍌',cat:'fruits',cal:89,goal:['muscle'],vit:'B6, C',min:'Potassium, Mg',nuts:{Carbs:95,Fiber:55,VitB6:90,Sugar:75}},
+  {name:'Mango',emoji:'🥭',cat:'fruits',cal:60,goal:['skin'],vit:'A, C, B6',min:'K, Cu',nuts:{Carbs:88,Fiber:50,VitA:85,VitC:75}},
+  {name:'Broccoli',emoji:'🥦',cat:'vegetables',cal:34,goal:['weightloss','skin'],vit:'C, K, A',min:'Fe, Ca',nuts:{Fiber:80,VitC:90,VitK:95,Protein:40}},
+  {name:'Spinach',emoji:'🥬',cat:'vegetables',cal:23,goal:['weightloss','skin'],vit:'K, A, C',min:'Fe, Mg, Ca',nuts:{Iron:88,VitK:98,VitA:90,Fiber:60}},
+  {name:'Sweet Potato',emoji:'🍠',cat:'vegetables',cal:86,goal:['skin','muscle'],vit:'A, B6, C',min:'K, Mn',nuts:{VitA:95,Fiber:70,Carbs:80,VitC:60}},
+  {name:'Brown Rice',emoji:'🌾',cat:'grains',cal:216,goal:['muscle'],vit:'B1, B3, B6',min:'Mg, P, Zn',nuts:{Carbs:92,Fiber:65,Protein:55,Mg:70}},
+  {name:'Quinoa',emoji:'🌿',cat:'grains',cal:222,goal:['muscle','weightloss'],vit:'B1, B2, B9',min:'Mg, P, Fe',nuts:{Protein:80,Fiber:75,Iron:70,Carbs:85}},
+  {name:'Oats',emoji:'🥣',cat:'grains',cal:389,goal:['muscle','weightloss'],vit:'B1, B5',min:'Mg, P, Zn, Fe',nuts:{Fiber:85,Protein:75,Iron:80,Carbs:90}},
+  {name:'Salmon',emoji:'🐟',cat:'proteins',cal:208,goal:['skin','muscle'],vit:'D, B12, B3',min:'Se, P, K',nuts:{Protein:95,Omega3:98,VitD:88,B12:90}},
+  {name:'Eggs',emoji:'🥚',cat:'proteins',cal:155,goal:['muscle'],vit:'B12, D, A',min:'Se, P, Fe',nuts:{Protein:90,VitD:75,B12:85,Choline:95}},
+  {name:'Chicken',emoji:'🍗',cat:'proteins',cal:165,goal:['muscle'],vit:'B3, B6, B12',min:'P, Se, Zn',nuts:{Protein:98,B3:90,B6:80,Se:75}},
+  {name:'Greek Yogurt',emoji:'🥛',cat:'dairy',cal:100,goal:['muscle','weightloss'],vit:'B12, B2',min:'Ca, P, K',nuts:{Protein:85,Calcium:90,Probiotics:88,B12:80}},
+  {name:'Milk',emoji:'🥛',cat:'dairy',cal:61,goal:['muscle'],vit:'D, B12, A',min:'Ca, P, K',nuts:{Calcium:92,Protein:70,VitD:80,B12:85}},
+  {name:'Turmeric',emoji:'💛',cat:'herbs',cal:354,goal:['skin','weightloss'],vit:'C, B6',min:'Mn, Fe, K',nuts:{Antioxidants:97,AntiInflam:99,Iron:75,Fiber:65}},
+  {name:'Ginger',emoji:'🫚',cat:'herbs',cal:80,goal:['weightloss'],vit:'B6, C',min:'Mg, K, Mn',nuts:{AntiInflam:92,Digestion:88,Antioxidants:80,VitC:55}},
+  {name:'Garlic',emoji:'🧄',cat:'herbs',cal:149,goal:['skin','weightloss'],vit:'C, B6',min:'Mn, Se, Ca',nuts:{Allicin:99,Immunity:95,AntiInflam:85,VitC:60}},
+];
+
+function renderFoodChart(filter){
+  const grid = document.getElementById('food-chart-grid');
+  const items = filter==='all'?foodData:foodData.filter(f=>f.cat===filter);
+  grid.innerHTML = items.map(f=>`
+    <div class="food-item-card">
+      <span class="food-emoji">${f.emoji}</span>
+      <div class="food-item-name">${f.name}</div>
+      <div class="food-item-cat">${f.cat}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">🔥 ${f.cal} kcal | Vit: ${f.vit}</div>
+      <div class="nutrition-bars">${Object.entries(f.nuts).map(([k,v])=>`
+        <div>
+          <div class="nut-bar-label"><span>${k}</span><span>${v}%</span></div>
+          <div class="nut-bar-track"><div class="nut-bar-fill" style="width:${v}%"></div></div>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function filterFoods(cat, el){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderFoodChart(cat);
+}
+
+function filterGoal(goal, el){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const grid = document.getElementById('food-chart-grid');
+  const items = foodData.filter(f=>f.goal.includes(goal));
+  grid.innerHTML = items.map(f=>`
+    <div class="food-item-card">
+      <span class="food-emoji">${f.emoji}</span>
+      <div class="food-item-name">${f.name}</div>
+      <div class="food-item-cat">${f.cat}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">🔥 ${f.cal} kcal | Vit: ${f.vit}</div>
+      <div class="nutrition-bars">${Object.entries(f.nuts).map(([k,v])=>`
+        <div>
+          <div class="nut-bar-label"><span>${k}</span><span>${v}%</span></div>
+          <div class="nut-bar-track"><div class="nut-bar-fill" style="width:${v}%"></div></div>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ── RECIPES ──
+const recipesData = [
+  {name:'Acai Power Bowl',img:'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400',meal:'Breakfast',diet:'Vegan',time:'10 min',cal:320,stars:5,desc:'Thick acai base topped with granola, fresh berries, banana slices and a drizzle of raw honey.',badge:'Vegan'},
+  {name:'Superfood Salad',img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400',meal:'Lunch',diet:'Vegan',time:'15 min',cal:285,stars:5,desc:'Kale, quinoa, roasted chickpeas, avocado, cherry tomatoes with tahini lemon dressing.',badge:'Raw'},
+  {name:'Herb Salmon Fillet',img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400',meal:'Dinner',diet:'Keto',time:'25 min',cal:560,stars:4,desc:'Pan-seared Atlantic salmon with garlic herb butter, asparagus and lemon caper sauce.',badge:'Keto'},
+  {name:'Green Detox Smoothie',img:'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400',meal:'Breakfast',diet:'Vegan',time:'5 min',cal:190,stars:4,desc:'Spinach, cucumber, green apple, ginger, lemon and coconut water blended to perfection.',badge:'Detox'},
+  {name:'Chicken Biryani',img:'https://images.unsplash.com/photo-1563379091339-03246963d96c?w=400',meal:'Dinner',diet:'Desi',time:'60 min',cal:720,stars:5,desc:'Aromatic long-grain basmati rice layered with tender spiced chicken, fried onions and saffron.',badge:'Desi'},
+  {name:'Avocado Toast',img:'https://images.unsplash.com/photo-1541519227354-08fa5d50c820?w=400',meal:'Breakfast',diet:'Vegan',time:'8 min',cal:380,stars:4,desc:'Sourdough topped with smashed avocado, everything bagel seasoning, micro greens and poached egg.',badge:'Quick'},
+];
+
+function renderRecipes(){
+  const grid = document.getElementById('recipes-grid');
+  if(!grid || grid.children.length>0) return;
+  grid.innerHTML = recipesData.map(r=>`
+    <div class="recipe-card">
+      <div class="recipe-img-wrap">
+        <img src="${r.img}" alt="${r.name}">
+        <div class="recipe-badges"><span class="badge badge-green">${r.diet}</span><span class="badge badge-gold">${r.meal}</span></div>
+        <button class="recipe-bookmark">🔖</button>
+      </div>
+      <div class="recipe-body">
+        <h3 class="recipe-name">${r.name}</h3>
+        <div class="recipe-info">
+          <span>⏱ ${r.time}</span>
+          <span>🔥 ${r.cal} kcal</span>
+        </div>
+        <div class="recipe-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+        <p class="recipe-desc">${r.desc}</p>
+        <div class="recipe-footer">
+          <button class="btn-recipe">View Recipe</button>
+          <button style="background:none;border:1px solid var(--border);padding:7px 14px;border-radius:100px;font-size:12px;cursor:pointer;color:var(--green);">+ Add to Cart</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ── HEALTH COMPARISON BARS ──
+function renderHealthBars(){
+  const good = [
+    {label:'Fiber Content',val:88,color:'var(--green-light)'},
+    {label:'Vitamins & Minerals',val:94,color:'var(--green)'},
+    {label:'Antioxidants',val:91,color:'#52b788'},
+    {label:'Natural Sugars',val:45,color:'#95d5b2'},
+  ];
+  const bad = [
+    {label:'Artificial Additives',val:78,color:'#e74c3c'},
+    {label:'Refined Sugars',val:85,color:'#c0392b'},
+    {label:'Saturated Fats',val:72,color:'#e74c3c'},
+    {label:'Sodium',val:80,color:'#c0392b'},
+  ];
+  const g = document.getElementById('good-foods-bars');
+  const b = document.getElementById('bad-foods-bars');
+  if(!g||!b) return;
+  [good,bad].forEach((arr,i)=>{
+    const el = i===0?g:b;
+    el.innerHTML = arr.map(item=>`
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span>${item.label}</span><span style="font-weight:500;">${item.val}%</span></div>
+        <div style="height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;">
+          <div style="width:${item.val}%;height:100%;background:${item.color};border-radius:4px;transition:width 1s;"></div>
+        </div>
+      </div>`).join('');
+  });
+}
+</script>
+</body>
+</html>
